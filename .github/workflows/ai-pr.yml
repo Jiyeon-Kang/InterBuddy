@@ -20,11 +20,11 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
       - name: Install dependencies
         run: |
-          pip install google-generativeai
+          pip install google-genai
 
       - name: Generate PR Description and Create PR
         env:
@@ -34,7 +34,7 @@ jobs:
           python - <<EOF
           import os
           import subprocess
-          import google.generativeai as genai
+          from google import genai
 
           subprocess.run(["git", "fetch", "origin", "main"])
           diff_result = subprocess.run(
@@ -47,13 +47,14 @@ jobs:
               print("No changes found.")
               exit(0)
 
-          genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-          
-          model = genai.GenerativeModel('gemini-1.5-flash')
+          client = genai.Client()
           
           prompt = f"Analyze the following git diff and write a professional Pull Request description in English. Include a summary of changes and a checklist:\n\n{git_diff}"
           
-          response = model.generate_content(prompt)
+          response = client.models.generate_content(
+              model='gemini-1.5-flash',
+              contents=prompt
+          )
           pr_body = response.text
 
           with open("pr_body.md", "w", encoding="utf-8") as f:
