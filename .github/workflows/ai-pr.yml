@@ -52,7 +52,7 @@ jobs:
           prompt = f"Analyze the following git diff and write a professional Pull Request description in English. Include a summary of changes and a checklist:\n\n{git_diff}"
           
           response = client.models.generate_content(
-              model='gemini-1.5-flash',
+              model='gemini-2.5-flash',
               contents=prompt
           )
           pr_body = response.text
