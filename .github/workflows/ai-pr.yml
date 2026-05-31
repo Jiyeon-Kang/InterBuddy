@@ -1,0 +1,84 @@
+name: AI Pull Request Creator
+on:
+  push:
+    branches-ignore:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  ai-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install google-genai
+
+      - name: Generate PR Description and Create PR
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python - <<EOF
+          import os
+          import subprocess
+          from google import genai
+
+          subprocess.run(["git", "fetch", "origin", "main"])
+          diff_result = subprocess.run(
+              ["git", "diff", "origin/main...HEAD"], 
+              capture_output=True, text=True
+          )
+          git_diff = diff_result.stdout
+
+          if not git_diff.strip():
+              print("No changes found.")
+              exit(0)
+
+          client = genai.Client()
+          
+          prompt = f"Analyze the following git diff and write a professional Pull Request description in English. Include a summary of changes and a checklist:\n\n{git_diff}"
+          
+          response = client.models.generate_content(
+              model='gemini-1.5-flash',
+              contents=prompt
+          )
+          pr_body = response.text
+
+          with open("pr_body.md", "w", encoding="utf-8") as f:
+              f.write(pr_body)
+
+          current_branch = subprocess.run(
+              ["git", "branch", "--show-current"], 
+              capture_output=True, text=True
+          ).stdout.strip()
+
+          check_pr = subprocess.run(
+              ["gh", "pr", "view", current_branch], 
+              capture_output=True, text=True
+          )
+
+          if "no open pull requests" in check_pr.stderr or check_pr.returncode != 0:
+              print(f"Creating PR for branch {current_branch}...")
+              subprocess.run([
+                  "gh", "pr", "create",
+                  "--title", f"feat: updates from {current_branch}",
+                  "--body-file", "pr_body.md",
+                  "--base", "main",
+                  "--head", current_branch
+              ])
+          else:
+              print("PR already exists. Updating body is skipped in this script.")
+          EOF
