@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/ChatScreen.dart';
+import 'package:flutter_application_1/screens/WelcomeScreen.dart';
 
 void main() {
   runApp(const InterBuddyApp());
@@ -12,7 +12,7 @@ class InterBuddyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ChatScreen(),
+      home: WelcomeScreen(),
     );
   }
 }
