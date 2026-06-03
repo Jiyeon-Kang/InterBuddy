@@ -80,7 +80,12 @@ jobs:
                   "--body-file", "pr_body.md",
                   "--base", "main",
                   "--head", current_branch
-              ])
+              ], check=True)
           else:
-              print("PR already exists. Updating body is skipped in this script.")
+              print(f"PR already exists for branch {current_branch}. Updating body...")
+              subprocess.run([
+                  "gh", "pr", "edit",
+                  current_branch,
+                  "--body-file", "pr_body.md"
+              ], check=True)
           EOF
