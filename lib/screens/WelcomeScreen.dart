@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/ChatScreen.dart';
+import 'package:flutter_application_1/screens/InterviewSetupScreen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -51,7 +51,7 @@ class WelcomeScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const ChatScreen(),
+                      builder: (context) => const InterviewSetupScreen(),
                     ),
                   );
                 },
