@@ -32,6 +32,12 @@ void main() {
     expect(find.text('Spring Boot'), findsOneWidget);
     expect(find.text('Add your language or stack'), findsOneWidget);
 
+    await tester.tap(find.text('Java'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Spring Boot'));
+    await tester.pumpAndSettle();
+
     await tester.ensureVisible(find.byIcon(Icons.add));
     await tester.pumpAndSettle();
 

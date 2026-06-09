@@ -13,7 +13,7 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
   static const int recommendedLanguageLimit = 10;
 
   String selectedField = '';
-  String selectedLanguage = '';
+  final List<String> selectedLanguages = [];
   String selectedLevel = 'Junior';
   String selectedType = 'Technical';
   int questionCount = 5;
@@ -55,8 +55,18 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
     setState(() {
       customLanguagesByField.putIfAbsent(selectedField, () => []);
       customLanguagesByField[selectedField]!.add(customLanguage);
-      selectedLanguage = customLanguage;
+      selectedLanguages.add(customLanguage);
       customLanguageController.clear();
+    });
+  }
+
+  void toggleLanguage(String language) {
+    setState(() {
+      if (selectedLanguages.contains(language)) {
+        selectedLanguages.remove(language);
+      } else {
+        selectedLanguages.add(language);
+      }
     });
   }
 
@@ -109,23 +119,19 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
                 onSelected: (value) {
                   setState(() {
                     selectedField = value;
-                    selectedLanguage = '';
+                    selectedLanguages.clear();
                   });
                 },
               ),
               const SizedBox(height: 28),
-              const _SectionTitle(title: 'Programming Language'),
+              const _SectionTitle(title: 'Skills'),
               const SizedBox(height: 12),
               _LanguageSelector(
                 options: visibleLanguageOptions,
-                selectedLanguage: selectedLanguage,
+                selectedLanguages: selectedLanguages,
                 isEnabled: selectedField.isNotEmpty,
                 controller: customLanguageController,
-                onSelected: (value) {
-                  setState(() {
-                    selectedLanguage = value;
-                  });
-                },
+                onSelected: toggleLanguage,
                 onAdd: addCustomLanguage,
               ),
               const SizedBox(height: 28),
@@ -219,7 +225,7 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
 class _LanguageSelector extends StatelessWidget {
   const _LanguageSelector({
     required this.options,
-    required this.selectedLanguage,
+    required this.selectedLanguages,
     required this.isEnabled,
     required this.controller,
     required this.onSelected,
@@ -227,7 +233,7 @@ class _LanguageSelector extends StatelessWidget {
   });
 
   final List<String> options;
-  final String selectedLanguage;
+  final List<String> selectedLanguages;
   final bool isEnabled;
   final TextEditingController controller;
   final ValueChanged<String> onSelected;
@@ -253,9 +259,9 @@ class _LanguageSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _ChoiceGroup(
+        _MultiChoiceGroup(
           options: options,
-          selectedOption: selectedLanguage,
+          selectedOptions: selectedLanguages,
           onSelected: onSelected,
         ),
         const SizedBox(height: 12),
@@ -304,6 +310,53 @@ class _SectionTitle extends StatelessWidget {
         fontWeight: FontWeight.bold,
         color: Colors.black87,
       ),
+    );
+  }
+}
+
+class _MultiChoiceGroup extends StatelessWidget {
+  const _MultiChoiceGroup({
+    required this.options,
+    required this.selectedOptions,
+    required this.onSelected,
+  });
+
+  final List<String> options;
+  final List<String> selectedOptions;
+  final ValueChanged<String> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      children: options.map((option) {
+        final bool isSelected = selectedOptions.contains(option);
+
+        return Theme(
+          data: Theme.of(context).copyWith(
+            splashFactory: NoSplash.splashFactory,
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+          ),
+          child: ChoiceChip(
+            label: Text(option),
+            selected: isSelected,
+            selectedColor: Colors.blueAccent,
+            pressElevation: 0,
+            showCheckmark: true,
+            labelStyle: TextStyle(
+              color: isSelected ? Colors.white : Colors.black87,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
+            backgroundColor: Colors.grey.shade100,
+            side: BorderSide(
+              color: isSelected ? Colors.blueAccent : Colors.grey.shade300,
+            ),
+            onSelected: (_) => onSelected(option),
+          ),
+        );
+      }).toList(),
     );
   }
 }
