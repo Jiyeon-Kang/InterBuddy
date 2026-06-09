@@ -74,6 +74,7 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
                 value: selectedLanguage.isEmpty ? null : selectedLanguage,
+                menuMaxHeight: 280,
                 decoration: InputDecoration(
                   labelText: 'Select language',
                   filled: selectedField.isEmpty,
