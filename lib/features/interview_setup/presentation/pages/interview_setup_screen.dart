@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/const/interview_setup_constants.dart';
+import 'package:flutter_application_1/features/interview_setup/presentation/widgets/add_skill_button.dart';
+import 'package:flutter_application_1/features/interview_setup/presentation/widgets/custom_skill_text_field.dart';
+import 'package:flutter_application_1/features/interview_setup/presentation/widgets/selectable_tag_list.dart';
 import 'package:flutter_application_1/screens/ChatScreen.dart';
 
 class InterviewSetupScreen extends StatefulWidget {
@@ -113,9 +116,9 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
               const SizedBox(height: 32),
               const _SectionTitle(title: 'Field'),
               const SizedBox(height: 12),
-              _ChoiceGroup(
+              SelectableTagList(
                 options: interviewFields,
-                selectedOption: selectedField,
+                selectedOptions: selectedField.isEmpty ? [] : [selectedField],
                 onSelected: (value) {
                   setState(() {
                     selectedField = value;
@@ -126,20 +129,52 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
               const SizedBox(height: 28),
               const _SectionTitle(title: 'Skills'),
               const SizedBox(height: 12),
-              _LanguageSelector(
-                options: visibleLanguageOptions,
-                selectedLanguages: selectedLanguages,
-                isEnabled: selectedField.isNotEmpty,
-                controller: customLanguageController,
-                onSelected: toggleLanguage,
-                onAdd: addCustomLanguage,
-              ),
+              if (selectedField.isEmpty)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: Text(
+                    'Choose a field first',
+                    style: TextStyle(color: Colors.grey.shade600),
+                  ),
+                )
+              else
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SelectableTagList(
+                      options: visibleLanguageOptions,
+                      selectedOptions: selectedLanguages,
+                      onSelected: toggleLanguage,
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CustomSkillTextField(
+                            controller: customLanguageController,
+                            onSubmitted: addCustomLanguage,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        AddSkillButton(onPressed: addCustomLanguage),
+                      ],
+                    ),
+                  ],
+                ),
               const SizedBox(height: 28),
               const _SectionTitle(title: 'Experience Level'),
               const SizedBox(height: 12),
-              _ChoiceGroup(
+              SelectableTagList(
                 options: interviewLevels,
-                selectedOption: selectedLevel,
+                selectedOptions: [selectedLevel],
                 onSelected: (value) {
                   setState(() {
                     selectedLevel = value;
@@ -149,9 +184,9 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
               const SizedBox(height: 28),
               const _SectionTitle(title: 'Interview Type'),
               const SizedBox(height: 12),
-              _ChoiceGroup(
+              SelectableTagList(
                 options: interviewTypes,
-                selectedOption: selectedType,
+                selectedOptions: [selectedType],
                 onSelected: (value) {
                   setState(() {
                     selectedType = value;
@@ -222,80 +257,6 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
   }
 }
 
-class _LanguageSelector extends StatelessWidget {
-  const _LanguageSelector({
-    required this.options,
-    required this.selectedLanguages,
-    required this.isEnabled,
-    required this.controller,
-    required this.onSelected,
-    required this.onAdd,
-  });
-
-  final List<String> options;
-  final List<String> selectedLanguages;
-  final bool isEnabled;
-  final TextEditingController controller;
-  final ValueChanged<String> onSelected;
-  final VoidCallback onAdd;
-
-  @override
-  Widget build(BuildContext context) {
-    if (!isEnabled) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(
-          color: Colors.grey.shade100,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade300),
-        ),
-        child: Text(
-          'Choose a field first',
-          style: TextStyle(color: Colors.grey.shade600),
-        ),
-      );
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _MultiChoiceGroup(
-          options: options,
-          selectedOptions: selectedLanguages,
-          onSelected: onSelected,
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: controller,
-                decoration: InputDecoration(
-                  hintText: 'Add your language or stack',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 14,
-                  ),
-                ),
-                onSubmitted: (_) => onAdd(),
-              ),
-            ),
-            const SizedBox(width: 8),
-            IconButton.filled(
-              onPressed: onAdd,
-              icon: const Icon(Icons.add),
-              tooltip: 'Add language',
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
 class _SectionTitle extends StatelessWidget {
   const _SectionTitle({required this.title});
 
@@ -310,100 +271,6 @@ class _SectionTitle extends StatelessWidget {
         fontWeight: FontWeight.bold,
         color: Colors.black87,
       ),
-    );
-  }
-}
-
-class _MultiChoiceGroup extends StatelessWidget {
-  const _MultiChoiceGroup({
-    required this.options,
-    required this.selectedOptions,
-    required this.onSelected,
-  });
-
-  final List<String> options;
-  final List<String> selectedOptions;
-  final ValueChanged<String> onSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 10,
-      runSpacing: 10,
-      children: options.map((option) {
-        final bool isSelected = selectedOptions.contains(option);
-
-        return Theme(
-          data: Theme.of(context).copyWith(
-            splashFactory: NoSplash.splashFactory,
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-          ),
-          child: ChoiceChip(
-            label: Text(option),
-            selected: isSelected,
-            selectedColor: Colors.blueAccent,
-            pressElevation: 0,
-            showCheckmark: true,
-            labelStyle: TextStyle(
-              color: isSelected ? Colors.white : Colors.black87,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            ),
-            backgroundColor: Colors.grey.shade100,
-            side: BorderSide(
-              color: isSelected ? Colors.blueAccent : Colors.grey.shade300,
-            ),
-            onSelected: (_) => onSelected(option),
-          ),
-        );
-      }).toList(),
-    );
-  }
-}
-
-class _ChoiceGroup extends StatelessWidget {
-  const _ChoiceGroup({
-    required this.options,
-    required this.selectedOption,
-    required this.onSelected,
-  });
-
-  final List<String> options;
-  final String selectedOption;
-  final ValueChanged<String> onSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 10,
-      runSpacing: 10,
-      children: options.map((option) {
-        final bool isSelected = option == selectedOption;
-
-        return Theme(
-          data: Theme.of(context).copyWith(
-            splashFactory: NoSplash.splashFactory,
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-          ),
-          child: ChoiceChip(
-            label: Text(option),
-            selected: isSelected,
-            selectedColor: Colors.blueAccent,
-            pressElevation: 0,
-            showCheckmark: true,
-            labelStyle: TextStyle(
-              color: isSelected ? Colors.white : Colors.black87,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            ),
-            backgroundColor: Colors.grey.shade100,
-            side: BorderSide(
-              color: isSelected ? Colors.blueAccent : Colors.grey.shade300,
-            ),
-            onSelected: (_) => onSelected(option),
-          ),
-        );
-      }).toList(),
     );
   }
 }
