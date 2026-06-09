@@ -10,11 +10,55 @@ class InterviewSetupScreen extends StatefulWidget {
 }
 
 class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
+  static const int recommendedLanguageLimit = 10;
+
   String selectedField = '';
   String selectedLanguage = '';
   String selectedLevel = 'Junior';
   String selectedType = 'Technical';
   int questionCount = 5;
+  final TextEditingController customLanguageController =
+      TextEditingController();
+  final Map<String, List<String>> customLanguagesByField = {};
+
+  @override
+  void dispose() {
+    customLanguageController.dispose();
+    super.dispose();
+  }
+
+  List<String> get visibleLanguageOptions {
+    if (selectedField.isEmpty) {
+      return [];
+    }
+
+    return [
+      ...programmingLanguagesByField[selectedField]!.take(
+        recommendedLanguageLimit,
+      ),
+      ...?customLanguagesByField[selectedField],
+    ];
+  }
+
+  void addCustomLanguage() {
+    if (selectedField.isEmpty) {
+      return;
+    }
+
+    final String customLanguage = customLanguageController.text.trim();
+
+    if (customLanguage.isEmpty ||
+        visibleLanguageOptions.contains(customLanguage)) {
+      return;
+    }
+
+    setState(() {
+      customLanguagesByField.putIfAbsent(selectedField, () => []);
+      customLanguagesByField[selectedField]!.add(customLanguage);
+      selectedLanguage = customLanguage;
+      customLanguageController.clear();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,60 +116,17 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
               const SizedBox(height: 28),
               const _SectionTitle(title: 'Programming Language'),
               const SizedBox(height: 12),
-              DropdownButtonFormField<String>(
-                value: selectedLanguage.isEmpty ? null : selectedLanguage,
-                menuMaxHeight: 280,
-                decoration: InputDecoration(
-                  labelText: 'Select language',
-                  filled: selectedField.isEmpty,
-                  fillColor: selectedField.isEmpty
-                      ? Colors.grey.shade100
-                      : Colors.white,
-                  labelStyle: TextStyle(
-                    color: selectedField.isEmpty
-                        ? Colors.grey.shade600
-                        : Colors.black54,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: selectedField.isEmpty
-                          ? Colors.grey.shade300
-                          : Colors.blueAccent,
-                    ),
-                  ),
-                  disabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey.shade300),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 14,
-                  ),
-                ),
-                items: selectedField.isEmpty
-                    ? []
-                    : programmingLanguagesByField[selectedField]!
-                        .map(
-                          (language) => DropdownMenuItem(
-                            value: language,
-                            child: Text(language),
-                          ),
-                        )
-                        .toList(),
-                onChanged: selectedField.isEmpty
-                    ? null
-                    : (value) {
-                        if (value == null) return;
-                        setState(() {
-                          selectedLanguage = value;
-                        });
-                      },
-                hint: const Text('Choose a field first'),
-                disabledHint: const Text('Choose a field first'),
+              _LanguageSelector(
+                options: visibleLanguageOptions,
+                selectedLanguage: selectedLanguage,
+                isEnabled: selectedField.isNotEmpty,
+                controller: customLanguageController,
+                onSelected: (value) {
+                  setState(() {
+                    selectedLanguage = value;
+                  });
+                },
+                onAdd: addCustomLanguage,
               ),
               const SizedBox(height: 28),
               const _SectionTitle(title: 'Experience Level'),
@@ -211,6 +212,80 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _LanguageSelector extends StatelessWidget {
+  const _LanguageSelector({
+    required this.options,
+    required this.selectedLanguage,
+    required this.isEnabled,
+    required this.controller,
+    required this.onSelected,
+    required this.onAdd,
+  });
+
+  final List<String> options;
+  final String selectedLanguage;
+  final bool isEnabled;
+  final TextEditingController controller;
+  final ValueChanged<String> onSelected;
+  final VoidCallback onAdd;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!isEnabled) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade300),
+        ),
+        child: Text(
+          'Choose a field first',
+          style: TextStyle(color: Colors.grey.shade600),
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _ChoiceGroup(
+          options: options,
+          selectedOption: selectedLanguage,
+          onSelected: onSelected,
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: controller,
+                decoration: InputDecoration(
+                  hintText: 'Add your language or stack',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
+                ),
+                onSubmitted: (_) => onAdd(),
+              ),
+            ),
+            const SizedBox(width: 8),
+            IconButton.filled(
+              onPressed: onAdd,
+              icon: const Icon(Icons.add),
+              tooltip: 'Add language',
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

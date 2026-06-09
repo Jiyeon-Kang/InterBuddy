@@ -17,6 +17,7 @@ void main() {
     expect(find.text('Field'), findsOneWidget);
     expect(find.text('Frontend'), findsOneWidget);
     expect(find.text('Backend'), findsOneWidget);
+    expect(find.text('Choose a field first'), findsOneWidget);
     expect(find.text('Experience Level'), findsOneWidget);
     expect(find.text('Junior'), findsOneWidget);
     expect(find.text('Interview Type'), findsOneWidget);
@@ -26,6 +27,22 @@ void main() {
 
     await tester.tap(find.text('Backend'));
     await tester.pumpAndSettle();
+
+    expect(find.text('Java'), findsOneWidget);
+    expect(find.text('Spring Boot'), findsOneWidget);
+    expect(find.text('Add your language or stack'), findsOneWidget);
+
+    await tester.ensureVisible(find.byIcon(Icons.add));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+      find.byType(TextField),
+      'GraphQL',
+    );
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pumpAndSettle();
+
+    expect(find.text('GraphQL'), findsOneWidget);
 
     await tester.ensureVisible(find.text('Start Interview'));
     await tester.pumpAndSettle();
