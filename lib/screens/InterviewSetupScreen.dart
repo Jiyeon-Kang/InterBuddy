@@ -33,7 +33,7 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
     }
 
     return [
-      ...programmingLanguagesByField[selectedField]!.take(
+      ...skills[selectedField]!.take(
         recommendedLanguageLimit,
       ),
       ...?customLanguagesByField[selectedField],
