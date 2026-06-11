@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/features/interview_setup/presentation/pages/interview_setup_screen.dart';
 import 'package:flutter_application_1/screens/ChatScreen.dart';
-import 'package:flutter_application_1/screens/InterviewSetupScreen.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -30,7 +30,7 @@ void main() {
 
     expect(find.text('Java'), findsOneWidget);
     expect(find.text('Spring Boot'), findsOneWidget);
-    expect(find.text('Add your language or stack'), findsOneWidget);
+    expect(find.text('Add your skill or stack'), findsOneWidget);
 
     await tester.tap(find.text('Java'));
     await tester.pumpAndSettle();

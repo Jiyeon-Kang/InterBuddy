@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/InterviewSetupScreen.dart';
+import 'package:flutter_application_1/features/interview_setup/presentation/pages/interview_setup_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
