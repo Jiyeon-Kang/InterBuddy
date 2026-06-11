@@ -3,7 +3,7 @@ import 'package:flutter_application_1/const/interview_setup_constants.dart';
 import 'package:flutter_application_1/features/interview_setup/presentation/styles/interview_setup_screen_styles.dart';
 import 'package:flutter_application_1/features/interview_setup/presentation/widgets/selectable_tag_list.dart';
 import 'package:flutter_application_1/features/interview_setup/presentation/widgets/skill_selection_section.dart';
-import 'package:flutter_application_1/screens/ChatScreen.dart';
+import 'package:flutter_application_1/features/chat/presentation/pages/chat_screen.dart';
 
 class InterviewSetupScreen extends StatefulWidget {
   const InterviewSetupScreen({super.key});
