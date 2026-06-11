@@ -11,10 +11,9 @@ class InterviewSetupScreenStyles {
 
   static const double borderRadius = 12;
   static const double headerIconSize = 72;
-  static const double addSkillButtonSpacing = 8;
 
   static const EdgeInsets pagePadding = EdgeInsets.all(24.0);
-  static const EdgeInsets fieldPadding = EdgeInsets.symmetric(
+  static const EdgeInsets dropdownPadding = EdgeInsets.symmetric(
     horizontal: 16,
     vertical: 14,
   );
@@ -27,11 +26,7 @@ class InterviewSetupScreenStyles {
   static const SizedBox headerSectionGap = SizedBox(height: 32);
   static const SizedBox sectionTitleContentGap = SizedBox(height: 12);
   static const SizedBox sectionGap = SizedBox(height: 28);
-  static const SizedBox skillsInputGap = SizedBox(height: 12);
   static const SizedBox bottomButtonGap = SizedBox(height: 36);
-  static const SizedBox addSkillButtonGap = SizedBox(
-    width: addSkillButtonSpacing,
-  );
 
   static const TextStyle titleTextStyle = TextStyle(
     fontSize: 28,
@@ -69,7 +64,7 @@ class InterviewSetupScreenStyles {
   static InputDecoration dropdownDecoration() {
     return InputDecoration(
       border: inputBorder(),
-      contentPadding: fieldPadding,
+      contentPadding: dropdownPadding,
     );
   }
 
@@ -86,17 +81,5 @@ class InterviewSetupScreenStyles {
       overlayColor: WidgetStateProperty.all(Colors.transparent),
       splashFactory: NoSplash.splashFactory,
     );
-  }
-
-  static BoxDecoration disabledFieldDecoration() {
-    return BoxDecoration(
-      color: Colors.grey.shade100,
-      borderRadius: roundedBorderRadius,
-      border: Border.all(color: Colors.grey.shade300),
-    );
-  }
-
-  static TextStyle disabledFieldTextStyle() {
-    return TextStyle(color: Colors.grey.shade600);
   }
 }

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/const/interview_setup_constants.dart';
 import 'package:flutter_application_1/features/interview_setup/presentation/styles/interview_setup_screen_styles.dart';
-import 'package:flutter_application_1/features/interview_setup/presentation/widgets/add_skill_button.dart';
-import 'package:flutter_application_1/features/interview_setup/presentation/widgets/custom_skill_text_field.dart';
 import 'package:flutter_application_1/features/interview_setup/presentation/widgets/selectable_tag_list.dart';
+import 'package:flutter_application_1/features/interview_setup/presentation/widgets/skill_selection_section.dart';
 import 'package:flutter_application_1/screens/ChatScreen.dart';
 
 class InterviewSetupScreen extends StatefulWidget {
@@ -120,40 +119,14 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
               InterviewSetupScreenStyles.sectionGap,
               const _SectionTitle(title: 'Skills'),
               InterviewSetupScreenStyles.sectionTitleContentGap,
-              if (selectedField.isEmpty)
-                Container(
-                  padding: InterviewSetupScreenStyles.fieldPadding,
-                  decoration:
-                      InterviewSetupScreenStyles.disabledFieldDecoration(),
-                  child: Text(
-                    'Choose a field first',
-                    style: InterviewSetupScreenStyles.disabledFieldTextStyle(),
-                  ),
-                )
-              else
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SelectableTagList(
-                      options: visibleSkillOptions,
-                      selectedOptions: selectedSkills,
-                      onSelected: toggleSkill,
-                    ),
-                    InterviewSetupScreenStyles.skillsInputGap,
-                    Row(
-                      children: [
-                        Expanded(
-                          child: CustomSkillTextField(
-                            controller: customSkillController,
-                            onSubmitted: addCustomSkill,
-                          ),
-                        ),
-                        InterviewSetupScreenStyles.addSkillButtonGap,
-                        AddSkillButton(onPressed: addCustomSkill),
-                      ],
-                    ),
-                  ],
-                ),
+              SkillSelectionSection(
+                isEnabled: selectedField.isNotEmpty,
+                options: visibleSkillOptions,
+                selectedSkills: selectedSkills,
+                controller: customSkillController,
+                onSkillSelected: toggleSkill,
+                onSkillAdded: addCustomSkill,
+              ),
               InterviewSetupScreenStyles.sectionGap,
               const _SectionTitle(title: 'Experience Level'),
               InterviewSetupScreenStyles.sectionTitleContentGap,
