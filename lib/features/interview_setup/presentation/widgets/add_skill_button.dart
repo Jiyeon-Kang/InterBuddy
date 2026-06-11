@@ -15,7 +15,7 @@ class AddSkillButton extends StatelessWidget {
       onPressed: onPressed,
       style: AddSkillButtonStyles.style(),
       icon: const Icon(Icons.add),
-      tooltip: 'Add language',
+      tooltip: 'Add skill',
     );
   }
 }

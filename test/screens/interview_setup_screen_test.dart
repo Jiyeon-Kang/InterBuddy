@@ -30,7 +30,7 @@ void main() {
 
     expect(find.text('Java'), findsOneWidget);
     expect(find.text('Spring Boot'), findsOneWidget);
-    expect(find.text('Add your language or stack'), findsOneWidget);
+    expect(find.text('Add your skill or stack'), findsOneWidget);
 
     await tester.tap(find.text('Java'));
     await tester.pumpAndSettle();

@@ -16,7 +16,7 @@ class CustomSkillTextField extends StatelessWidget {
     return TextField(
       controller: controller,
       decoration: CustomSkillTextFieldStyles.decoration(
-        hintText: 'Add your language or stack',
+        hintText: 'Add your skill or stack',
       ),
       onSubmitted: (_) => onSubmitted(),
     );

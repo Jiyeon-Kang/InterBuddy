@@ -14,62 +14,60 @@ class InterviewSetupScreen extends StatefulWidget {
 }
 
 class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
-  static const int recommendedLanguageLimit = 10;
+  static const int recommendedSkillLimit = 10;
 
   String selectedField = '';
-  final List<String> selectedLanguages = [];
+  final List<String> selectedSkills = [];
   String selectedLevel = 'Junior';
   String selectedType = 'Technical';
   int questionCount = 5;
-  final TextEditingController customLanguageController =
-      TextEditingController();
-  final Map<String, List<String>> customLanguagesByField = {};
+  final TextEditingController customSkillController = TextEditingController();
+  final Map<String, List<String>> customSkillsByField = {};
 
   @override
   void dispose() {
-    customLanguageController.dispose();
+    customSkillController.dispose();
     super.dispose();
   }
 
-  List<String> get visibleLanguageOptions {
+  List<String> get visibleSkillOptions {
     if (selectedField.isEmpty) {
       return [];
     }
 
     return [
       ...skills[selectedField]!.take(
-        recommendedLanguageLimit,
+        recommendedSkillLimit,
       ),
-      ...?customLanguagesByField[selectedField],
+      ...?customSkillsByField[selectedField],
     ];
   }
 
-  void addCustomLanguage() {
+  void addCustomSkill() {
     if (selectedField.isEmpty) {
       return;
     }
 
-    final String customLanguage = customLanguageController.text.trim();
+    final String customSkill = customSkillController.text.trim();
 
-    if (customLanguage.isEmpty ||
-        visibleLanguageOptions.contains(customLanguage)) {
+    if (customSkill.isEmpty || visibleSkillOptions.contains(customSkill)) {
       return;
     }
 
     setState(() {
-      customLanguagesByField.putIfAbsent(selectedField, () => []);
-      customLanguagesByField[selectedField]!.add(customLanguage);
-      selectedLanguages.add(customLanguage);
-      customLanguageController.clear();
+      customSkillsByField.putIfAbsent(selectedField, () => []);
+      customSkillsByField[selectedField]!.add(customSkill);
+      selectedSkills.add(customSkill);
+      customSkillController.clear();
     });
   }
 
-  void toggleLanguage(String language) {
+  void toggleSkill(String skill) {
     setState(() {
-      if (selectedLanguages.contains(language)) {
-        selectedLanguages.remove(language);
+      if (selectedSkills.contains(skill)) {
+        selectedSkills.remove(skill);
       } else {
-        selectedLanguages.add(language);
+        selectedSkills.add(skill);
       }
     });
   }
@@ -115,7 +113,7 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
                 onSelected: (value) {
                   setState(() {
                     selectedField = value;
-                    selectedLanguages.clear();
+                    selectedSkills.clear();
                   });
                 },
               ),
@@ -137,21 +135,21 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     SelectableTagList(
-                      options: visibleLanguageOptions,
-                      selectedOptions: selectedLanguages,
-                      onSelected: toggleLanguage,
+                      options: visibleSkillOptions,
+                      selectedOptions: selectedSkills,
+                      onSelected: toggleSkill,
                     ),
                     InterviewSetupScreenStyles.skillsInputGap,
                     Row(
                       children: [
                         Expanded(
                           child: CustomSkillTextField(
-                            controller: customLanguageController,
-                            onSubmitted: addCustomLanguage,
+                            controller: customSkillController,
+                            onSubmitted: addCustomSkill,
                           ),
                         ),
                         InterviewSetupScreenStyles.addSkillButtonGap,
-                        AddSkillButton(onPressed: addCustomLanguage),
+                        AddSkillButton(onPressed: addCustomSkill),
                       ],
                     ),
                   ],
