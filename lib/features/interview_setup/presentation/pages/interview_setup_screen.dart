@@ -4,6 +4,7 @@ import 'package:flutter_application_1/features/interview_setup/presentation/styl
 import 'package:flutter_application_1/features/interview_setup/presentation/widgets/selectable_tag_list.dart';
 import 'package:flutter_application_1/features/interview_setup/presentation/widgets/skill_selection_section.dart';
 import 'package:flutter_application_1/features/chat/presentation/pages/chat_screen.dart';
+import 'package:flutter_application_1/shared/widgets/app_header.dart';
 
 class InterviewSetupScreen extends StatefulWidget {
   const InterviewSetupScreen({super.key});
@@ -75,11 +76,7 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: InterviewSetupScreenStyles.screenBackgroundColor,
-      appBar: AppBar(
-        title: const Text('Interview Setup'),
-        backgroundColor: InterviewSetupScreenStyles.primaryColor,
-        foregroundColor: InterviewSetupScreenStyles.selectedTextColor,
-      ),
+      appBar: const AppHeader(title: 'Interview Setup'),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: InterviewSetupScreenStyles.pagePadding,
