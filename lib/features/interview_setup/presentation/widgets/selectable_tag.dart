@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/features/interview_setup/presentation/widgets/styles/selectable_tag_styles.dart';
 
 class SelectableTag extends StatelessWidget {
   const SelectableTag({
@@ -15,25 +16,18 @@ class SelectableTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: Theme.of(context).copyWith(
-        splashFactory: NoSplash.splashFactory,
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-      ),
+      data: SelectableTagStyles.theme(context),
       child: ChoiceChip(
         label: Text(label),
         selected: isSelected,
-        selectedColor: Colors.blueAccent,
+        selectedColor: SelectableTagStyles.primaryColor,
         pressElevation: 0,
         showCheckmark: true,
-        labelStyle: TextStyle(
-          color: isSelected ? Colors.white : Colors.black87,
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        labelStyle: SelectableTagStyles.textStyle(
+          isSelected: isSelected,
         ),
-        backgroundColor: Colors.grey.shade100,
-        side: BorderSide(
-          color: isSelected ? Colors.blueAccent : Colors.grey.shade300,
-        ),
+        backgroundColor: SelectableTagStyles.backgroundColor(),
+        side: SelectableTagStyles.borderSide(isSelected: isSelected),
         onSelected: (_) => onSelected(),
       ),
     );

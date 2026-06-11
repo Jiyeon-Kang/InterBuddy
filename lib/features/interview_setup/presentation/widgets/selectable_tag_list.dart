@@ -13,11 +13,14 @@ class SelectableTagList extends StatelessWidget {
   final List<String> selectedOptions;
   final ValueChanged<String> onSelected;
 
+  static const double _spacing = 10;
+  static const double _runSpacing = 10;
+
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: 10,
-      runSpacing: 10,
+      spacing: _spacing,
+      runSpacing: _runSpacing,
       children: options.map((option) {
         return SelectableTag(
           label: option,

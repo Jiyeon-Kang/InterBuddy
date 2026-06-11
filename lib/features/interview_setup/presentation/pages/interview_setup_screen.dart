@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/const/interview_setup_constants.dart';
+import 'package:flutter_application_1/features/interview_setup/presentation/styles/interview_setup_screen_styles.dart';
 import 'package:flutter_application_1/features/interview_setup/presentation/widgets/add_skill_button.dart';
 import 'package:flutter_application_1/features/interview_setup/presentation/widgets/custom_skill_text_field.dart';
 import 'package:flutter_application_1/features/interview_setup/presentation/widgets/selectable_tag_list.dart';
@@ -76,46 +77,38 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: InterviewSetupScreenStyles.screenBackgroundColor,
       appBar: AppBar(
         title: const Text('Interview Setup'),
-        backgroundColor: Colors.blueAccent,
-        foregroundColor: Colors.white,
+        backgroundColor: InterviewSetupScreenStyles.primaryColor,
+        foregroundColor: InterviewSetupScreenStyles.selectedTextColor,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
+          padding: InterviewSetupScreenStyles.pagePadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Icon(
                 Icons.tune,
-                size: 72,
-                color: Colors.blueAccent,
+                size: InterviewSetupScreenStyles.headerIconSize,
+                color: InterviewSetupScreenStyles.primaryColor,
               ),
-              const SizedBox(height: 20),
+              InterviewSetupScreenStyles.headerIconTitleGap,
               const Text(
                 'Customize your interview',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
+                style: InterviewSetupScreenStyles.titleTextStyle,
               ),
-              const SizedBox(height: 8),
+              InterviewSetupScreenStyles.titleSubtitleGap,
               const Text(
                 'Choose your target role and interview style.',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                  height: 1.4,
-                ),
+                style: InterviewSetupScreenStyles.subtitleTextStyle,
               ),
-              const SizedBox(height: 32),
+              InterviewSetupScreenStyles.headerSectionGap,
               const _SectionTitle(title: 'Field'),
-              const SizedBox(height: 12),
+              InterviewSetupScreenStyles.sectionTitleContentGap,
               SelectableTagList(
                 options: interviewFields,
                 selectedOptions: selectedField.isEmpty ? [] : [selectedField],
@@ -126,23 +119,17 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
                   });
                 },
               ),
-              const SizedBox(height: 28),
+              InterviewSetupScreenStyles.sectionGap,
               const _SectionTitle(title: 'Skills'),
-              const SizedBox(height: 12),
+              InterviewSetupScreenStyles.sectionTitleContentGap,
               if (selectedField.isEmpty)
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 14,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey.shade300),
-                  ),
+                  padding: InterviewSetupScreenStyles.fieldPadding,
+                  decoration:
+                      InterviewSetupScreenStyles.disabledFieldDecoration(),
                   child: Text(
                     'Choose a field first',
-                    style: TextStyle(color: Colors.grey.shade600),
+                    style: InterviewSetupScreenStyles.disabledFieldTextStyle(),
                   ),
                 )
               else
@@ -154,7 +141,7 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
                       selectedOptions: selectedLanguages,
                       onSelected: toggleLanguage,
                     ),
-                    const SizedBox(height: 12),
+                    InterviewSetupScreenStyles.skillsInputGap,
                     Row(
                       children: [
                         Expanded(
@@ -163,15 +150,15 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
                             onSubmitted: addCustomLanguage,
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        InterviewSetupScreenStyles.addSkillButtonGap,
                         AddSkillButton(onPressed: addCustomLanguage),
                       ],
                     ),
                   ],
                 ),
-              const SizedBox(height: 28),
+              InterviewSetupScreenStyles.sectionGap,
               const _SectionTitle(title: 'Experience Level'),
-              const SizedBox(height: 12),
+              InterviewSetupScreenStyles.sectionTitleContentGap,
               SelectableTagList(
                 options: interviewLevels,
                 selectedOptions: [selectedLevel],
@@ -181,9 +168,9 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
                   });
                 },
               ),
-              const SizedBox(height: 28),
+              InterviewSetupScreenStyles.sectionGap,
               const _SectionTitle(title: 'Interview Type'),
-              const SizedBox(height: 12),
+              InterviewSetupScreenStyles.sectionTitleContentGap,
               SelectableTagList(
                 options: interviewTypes,
                 selectedOptions: [selectedType],
@@ -193,20 +180,12 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
                   });
                 },
               ),
-              const SizedBox(height: 28),
+              InterviewSetupScreenStyles.sectionGap,
               const _SectionTitle(title: 'Questions'),
-              const SizedBox(height: 12),
+              InterviewSetupScreenStyles.sectionTitleContentGap,
               DropdownButtonFormField<int>(
                 value: questionCount,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 14,
-                  ),
-                ),
+                decoration: InterviewSetupScreenStyles.dropdownDecoration(),
                 items: const [
                   DropdownMenuItem(value: 5, child: Text('5 questions')),
                   DropdownMenuItem(value: 10, child: Text('10 questions')),
@@ -222,7 +201,7 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
                   });
                 },
               ),
-              const SizedBox(height: 36),
+              InterviewSetupScreenStyles.bottomButtonGap,
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -232,21 +211,10 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
                     ),
                   );
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueAccent,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 0,
-                ).copyWith(
-                  overlayColor: WidgetStateProperty.all(Colors.transparent),
-                  splashFactory: NoSplash.splashFactory,
-                ),
+                style: InterviewSetupScreenStyles.startButtonStyle(),
                 child: const Text(
                   'Start Interview',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: InterviewSetupScreenStyles.startButtonTextStyle,
                 ),
               ),
             ],
@@ -266,11 +234,7 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       title,
-      style: const TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-        color: Colors.black87,
-      ),
+      style: InterviewSetupScreenStyles.sectionTitleTextStyle,
     );
   }
 }

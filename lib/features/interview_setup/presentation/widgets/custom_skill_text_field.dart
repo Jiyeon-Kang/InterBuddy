@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/features/interview_setup/presentation/widgets/styles/custom_skill_text_field_styles.dart';
 
 class CustomSkillTextField extends StatelessWidget {
   const CustomSkillTextField({
@@ -14,15 +15,8 @@ class CustomSkillTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
-      decoration: InputDecoration(
+      decoration: CustomSkillTextFieldStyles.decoration(
         hintText: 'Add your language or stack',
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 14,
-        ),
       ),
       onSubmitted: (_) => onSubmitted(),
     );
