@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/features/interview_setup/presentation/pages/interview_setup_screen.dart';
+import 'package:flutter_application_1/shared/widgets/primary_action_button.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -45,8 +46,8 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              // Get Started Button
-              ElevatedButton(
+              PrimaryActionButton(
+                label: 'Start Interview Practice',
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -55,19 +56,6 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                   );
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueAccent,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 0,
-                ),
-                child: const Text(
-                  'Start Interview Practice',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
               ),
               const SizedBox(height: 24),
             ],

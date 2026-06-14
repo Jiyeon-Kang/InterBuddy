@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/const/interview_setup_constants.dart';
+import 'package:flutter_application_1/features/chat/presentation/pages/chat_screen.dart';
 import 'package:flutter_application_1/features/interview_setup/presentation/styles/interview_setup_screen_styles.dart';
 import 'package:flutter_application_1/features/interview_setup/presentation/widgets/selectable_tag_list.dart';
 import 'package:flutter_application_1/features/interview_setup/presentation/widgets/skill_selection_section.dart';
-import 'package:flutter_application_1/features/chat/presentation/pages/chat_screen.dart';
 import 'package:flutter_application_1/shared/widgets/app_header.dart';
+import 'package:flutter_application_1/shared/widgets/primary_action_button.dart';
 
 class InterviewSetupScreen extends StatefulWidget {
   const InterviewSetupScreen({super.key});
@@ -170,7 +171,8 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
                 },
               ),
               InterviewSetupScreenStyles.bottomButtonGap,
-              ElevatedButton(
+              PrimaryActionButton(
+                label: 'Start Interview',
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -179,11 +181,6 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
                     ),
                   );
                 },
-                style: InterviewSetupScreenStyles.startButtonStyle(),
-                child: const Text(
-                  'Start Interview',
-                  style: InterviewSetupScreenStyles.startButtonTextStyle,
-                ),
               ),
             ],
           ),
