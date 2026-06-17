@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/features/interview_setup/presentation/pages/interview_setup_screen.dart';
+import 'package:flutter_application_1/features/welcome/presentation/styles/welcome_screen_styles.dart';
 import 'package:flutter_application_1/shared/widgets/primary_action_button.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -8,42 +9,31 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: WelcomeScreenStyles.screenBackgroundColor,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          padding: WelcomeScreenStyles.pagePadding,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Spacer(),
-              // Logo Icon
               const Icon(
                 Icons.psychology,
-                size: 100,
-                color: Colors.blueAccent,
+                size: WelcomeScreenStyles.logoIconSize,
+                color: WelcomeScreenStyles.primaryColor,
               ),
-              const SizedBox(height: 24),
-              // Main Title
+              WelcomeScreenStyles.logoTitleGap,
               const Text(
                 'InterBuddy',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
+                style: WelcomeScreenStyles.titleTextStyle,
               ),
-              const SizedBox(height: 12),
-              // Subtitle
+              WelcomeScreenStyles.titleSubtitleGap,
               const Text(
                 'Practice realistic interviews with AI\nand achieve your dreams.',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                  height: 1.5,
-                ),
+                style: WelcomeScreenStyles.subtitleTextStyle,
               ),
               const Spacer(),
               PrimaryActionButton(
@@ -57,7 +47,7 @@ class WelcomeScreen extends StatelessWidget {
                   );
                 },
               ),
-              const SizedBox(height: 24),
+              WelcomeScreenStyles.bottomGap,
             ],
           ),
         ),
