@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/features/chat/presentation/styles/chat_screen_styles.dart';
+import 'package:flutter_application_1/features/chat/presentation/widgets/chat_answer_text_field.dart';
+import 'package:flutter_application_1/features/chat/presentation/widgets/chat_input_action_button.dart';
+import 'package:flutter_application_1/shared/widgets/app_header.dart';
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
@@ -6,11 +10,7 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('InterBuddy - AI Interviewer'),
-        backgroundColor: Colors.blueAccent,
-        foregroundColor: Colors.white,
-      ),
+      appBar: const AppHeader(title: 'InterBuddy - AI Interviewer'),
       body: SafeArea(
         child: Column(
           children: [
@@ -18,26 +18,19 @@ class ChatScreen extends StatelessWidget {
               child: Center(
                 child: Text(
                   'AI Interviewer conversation will be displayed here.',
-                  style: TextStyle(color: Colors.grey, fontSize: 16),
+                  style: ChatScreenStyles.placeholderTextStyle,
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: ChatScreenStyles.inputAreaPadding,
               child: Row(
                 children: [
                   const Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Type your answer here...',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
+                    child: ChatAnswerTextField(),
                   ),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    icon: const Icon(Icons.send),
-                    color: Colors.blueAccent,
+                  ChatScreenStyles.inputActionGap,
+                  ChatInputActionButton(
                     onPressed: () {
                       // TODO: Handle sending message
                     },

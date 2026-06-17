@@ -17,10 +17,6 @@ class InterviewSetupScreenStyles {
     horizontal: 16,
     vertical: 14,
   );
-  static const EdgeInsets startButtonPadding = EdgeInsets.symmetric(
-    vertical: 16,
-  );
-
   static const SizedBox headerIconTitleGap = SizedBox(height: 20);
   static const SizedBox titleSubtitleGap = SizedBox(height: 8);
   static const SizedBox headerSectionGap = SizedBox(height: 32);
@@ -46,11 +42,6 @@ class InterviewSetupScreenStyles {
     color: textColor,
   );
 
-  static const TextStyle startButtonTextStyle = TextStyle(
-    fontSize: 18,
-    fontWeight: FontWeight.bold,
-  );
-
   static BorderRadius get roundedBorderRadius {
     return BorderRadius.circular(borderRadius);
   }
@@ -65,21 +56,6 @@ class InterviewSetupScreenStyles {
     return InputDecoration(
       border: inputBorder(),
       contentPadding: dropdownPadding,
-    );
-  }
-
-  static ButtonStyle startButtonStyle() {
-    return ElevatedButton.styleFrom(
-      backgroundColor: primaryColor,
-      foregroundColor: selectedTextColor,
-      padding: startButtonPadding,
-      shape: RoundedRectangleBorder(
-        borderRadius: roundedBorderRadius,
-      ),
-      elevation: 0,
-    ).copyWith(
-      overlayColor: WidgetStateProperty.all(Colors.transparent),
-      splashFactory: NoSplash.splashFactory,
     );
   }
 }
