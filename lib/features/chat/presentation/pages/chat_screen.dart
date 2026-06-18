@@ -1,11 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/features/chat/presentation/styles/chat_screen_styles.dart';
+import 'package:flutter_application_1/features/chat/presentation/widgets/ai_question_message.dart';
 import 'package:flutter_application_1/features/chat/presentation/widgets/chat_answer_text_field.dart';
 import 'package:flutter_application_1/features/chat/presentation/widgets/chat_input_action_button.dart';
+import 'package:flutter_application_1/features/chat/presentation/widgets/user_answer_message.dart';
 import 'package:flutter_application_1/shared/widgets/app_header.dart';
 
-class ChatScreen extends StatelessWidget {
+enum _ChatMessageRole { ai, user }
+
+class _ChatMessage {
+  const _ChatMessage({
+    required this.role,
+    required this.message,
+  });
+
+  final _ChatMessageRole role;
+  final String message;
+}
+
+class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
+
+  @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  final TextEditingController _answerController = TextEditingController();
+  final List<_ChatMessage> _messages = const [
+    _ChatMessage(
+      role: _ChatMessageRole.ai,
+      message:
+          'Tell me about a project where you solved a difficult technical problem.',
+    ),
+  ].toList();
+
+  @override
+  void dispose() {
+    _answerController.dispose();
+    super.dispose();
+  }
+
+  void _sendAnswer() {
+    final String answer = _answerController.text.trim();
+
+    if (answer.isEmpty) {
+      return;
+    }
+
+    setState(() {
+      _messages.add(
+        _ChatMessage(
+          role: _ChatMessageRole.user,
+          message: answer,
+        ),
+      );
+      _answerController.clear();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,26 +66,40 @@ class ChatScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const Expanded(
-              child: Center(
-                child: Text(
-                  'AI Interviewer conversation will be displayed here.',
-                  style: ChatScreenStyles.placeholderTextStyle,
-                ),
+            Expanded(
+              child: ListView.separated(
+                padding: ChatScreenStyles.conversationPadding,
+                itemCount: _messages.length,
+                separatorBuilder: (context, index) {
+                  return ChatScreenStyles.messageGap;
+                },
+                itemBuilder: (context, index) {
+                  final _ChatMessage message = _messages[index];
+
+                  return switch (message.role) {
+                    _ChatMessageRole.ai => AiQuestionMessage(
+                        message: message.message,
+                      ),
+                    _ChatMessageRole.user => UserAnswerMessage(
+                        message: message.message,
+                      ),
+                  };
+                },
               ),
             ),
             Padding(
               padding: ChatScreenStyles.inputAreaPadding,
               child: Row(
                 children: [
-                  const Expanded(
-                    child: ChatAnswerTextField(),
+                  Expanded(
+                    child: ChatAnswerTextField(
+                      controller: _answerController,
+                      onSubmitted: (_) => _sendAnswer(),
+                    ),
                   ),
                   ChatScreenStyles.inputActionGap,
                   ChatInputActionButton(
-                    onPressed: () {
-                      // TODO: Handle sending message
-                    },
+                    onPressed: _sendAnswer,
                   ),
                 ],
               ),
