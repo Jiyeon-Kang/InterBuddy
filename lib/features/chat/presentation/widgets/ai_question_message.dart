@@ -14,7 +14,7 @@ class AiQuestionMessage extends StatelessWidget {
     return ChatMessageBubble(
       message: message,
       alignment: Alignment.centerLeft,
-      backgroundColor: Colors.blueGrey.shade700,
+      backgroundColor: Colors.blueGrey.shade600,
       textColor: Colors.white,
     );
   }
