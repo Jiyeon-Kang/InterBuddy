@@ -3,12 +3,22 @@ import 'package:flutter_application_1/features/chat/presentation/widgets/chat_an
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('ChatAnswerTextField renders hint and accepts input',
+  testWidgets('ChatAnswerTextField renders hint, accepts input, and submits',
       (WidgetTester tester) async {
+    String? submittedAnswer;
+    final TextEditingController controller = TextEditingController();
+
+    addTearDown(controller.dispose);
+
     await tester.pumpWidget(
-      const MaterialApp(
+      MaterialApp(
         home: Scaffold(
-          body: ChatAnswerTextField(),
+          body: ChatAnswerTextField(
+            controller: controller,
+            onSubmitted: (value) {
+              submittedAnswer = value;
+            },
+          ),
         ),
       ),
     );
@@ -19,5 +29,10 @@ void main() {
     await tester.pump();
 
     expect(find.text('My answer'), findsOneWidget);
+
+    await tester.testTextInput.receiveAction(TextInputAction.send);
+    await tester.pump();
+
+    expect(submittedAnswer, 'My answer');
   });
 }
