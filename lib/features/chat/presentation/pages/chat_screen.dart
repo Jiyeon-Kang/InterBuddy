@@ -3,6 +3,7 @@ import 'package:flutter_application_1/features/chat/presentation/styles/chat_scr
 import 'package:flutter_application_1/features/chat/presentation/widgets/ai_question_message.dart';
 import 'package:flutter_application_1/features/chat/presentation/widgets/chat_answer_text_field.dart';
 import 'package:flutter_application_1/features/chat/presentation/widgets/chat_input_action_button.dart';
+import 'package:flutter_application_1/features/chat/presentation/widgets/chat_loading_indicator.dart';
 import 'package:flutter_application_1/features/chat/presentation/widgets/user_answer_message.dart';
 import 'package:flutter_application_1/shared/widgets/app_header.dart';
 
@@ -34,6 +35,7 @@ class _ChatScreenState extends State<ChatScreen> {
           'Tell me about a project where you solved a difficult technical problem.',
     ),
   ].toList();
+  bool _isWaitingForAi = false;
 
   @override
   void dispose() {
@@ -44,7 +46,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void _sendAnswer() {
     final String answer = _answerController.text.trim();
 
-    if (answer.isEmpty) {
+    if (answer.isEmpty || _isWaitingForAi) {
       return;
     }
 
@@ -56,6 +58,20 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       );
       _answerController.clear();
+      _isWaitingForAi = true;
+    });
+
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        _messages.add(
+          _ChatMessage(
+            role: _ChatMessageRole.ai,
+            message:
+                'That sounds like a strong example. Can you tell me more about the technical challenge you solved?',
+          ),
+        );
+        _isWaitingForAi = false;
+      });
     });
   }
 
@@ -69,11 +85,15 @@ class _ChatScreenState extends State<ChatScreen> {
             Expanded(
               child: ListView.separated(
                 padding: ChatScreenStyles.conversationPadding,
-                itemCount: _messages.length,
+                itemCount: _messages.length + (_isWaitingForAi ? 1 : 0),
                 separatorBuilder: (context, index) {
                   return ChatScreenStyles.messageGap;
                 },
                 itemBuilder: (context, index) {
+                  if (_isWaitingForAi && index == _messages.length) {
+                    return const ChatLoadingIndicator();
+                  }
+
                   final _ChatMessage message = _messages[index];
 
                   return switch (message.role) {
