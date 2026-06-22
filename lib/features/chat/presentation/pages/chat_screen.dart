@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/features/chat/data/ai_chat_service.dart';
 import 'package:flutter_application_1/features/chat/presentation/styles/chat_screen_styles.dart';
 import 'package:flutter_application_1/features/chat/presentation/widgets/ai_question_message.dart';
 import 'package:flutter_application_1/features/chat/presentation/widgets/chat_answer_text_field.dart';
@@ -36,6 +37,7 @@ class _ChatScreenState extends State<ChatScreen> {
     ),
   ].toList();
   bool _isWaitingForAi = false;
+  final AiChatService _aiService = const MockAiChatService();
 
   @override
   void dispose() {
@@ -61,14 +63,25 @@ class _ChatScreenState extends State<ChatScreen> {
       _isWaitingForAi = true;
     });
 
-    Future.delayed(const Duration(seconds: 1), () {
+    // Prepare a minimal history format for the AI service and await reply
+    final history = _messages
+        .map((m) => {
+              'role': m.role == _ChatMessageRole.user ? 'user' : 'ai',
+              'content': m.message,
+            })
+        .toList();
+
+    _aiService.sendMessage(history).then((reply) {
       setState(() {
         _messages.add(
-          _ChatMessage(
-            role: _ChatMessageRole.ai,
-            message:
-                'That sounds like a strong example. Can you tell me more about the technical challenge you solved?',
-          ),
+          _ChatMessage(role: _ChatMessageRole.ai, message: reply),
+        );
+        _isWaitingForAi = false;
+      });
+    }).catchError((error) {
+      setState(() {
+        _messages.add(
+          _ChatMessage(role: _ChatMessageRole.ai, message: 'Error: $error'),
         );
         _isWaitingForAi = false;
       });
