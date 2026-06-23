@@ -6,6 +6,7 @@ import 'package:flutter_application_1/features/chat/presentation/widgets/chat_an
 import 'package:flutter_application_1/features/chat/presentation/widgets/chat_input_action_button.dart';
 import 'package:flutter_application_1/features/chat/presentation/widgets/chat_loading_indicator.dart';
 import 'package:flutter_application_1/features/chat/presentation/widgets/user_answer_message.dart';
+import 'package:flutter_application_1/features/interview_result/presentation/pages/interview_result_screen.dart';
 import 'package:flutter_application_1/shared/widgets/app_header.dart';
 
 enum _ChatMessageRole { ai, user }
@@ -21,7 +22,12 @@ class _ChatMessage {
 }
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  const ChatScreen({
+    this.questionCount = 5,
+    super.key,
+  }) : assert(questionCount > 0);
+
+  final int questionCount;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -38,6 +44,8 @@ class _ChatScreenState extends State<ChatScreen> {
   ].toList();
   bool _isWaitingForAi = false;
   final AiChatService _aiService = const MockAiChatService();
+  int _answeredQuestionCount = 0;
+  int _totalAnswerLength = 0;
 
   @override
   void dispose() {
@@ -52,6 +60,9 @@ class _ChatScreenState extends State<ChatScreen> {
       return;
     }
 
+    final int nextAnsweredQuestionCount = _answeredQuestionCount + 1;
+    final int nextTotalAnswerLength = _totalAnswerLength + answer.length;
+
     setState(() {
       _messages.add(
         _ChatMessage(
@@ -60,6 +71,26 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       );
       _answerController.clear();
+      _answeredQuestionCount = nextAnsweredQuestionCount;
+      _totalAnswerLength = nextTotalAnswerLength;
+    });
+
+    if (nextAnsweredQuestionCount >= widget.questionCount) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => InterviewResultScreen(
+            answeredQuestionCount: nextAnsweredQuestionCount,
+            totalQuestionCount: widget.questionCount,
+            totalAnswerLength: nextTotalAnswerLength,
+          ),
+        ),
+      );
+
+      return;
+    }
+
+    setState(() {
       _isWaitingForAi = true;
     });
 
@@ -72,6 +103,10 @@ class _ChatScreenState extends State<ChatScreen> {
         .toList();
 
     _aiService.sendMessage(history).then((reply) {
+      if (!mounted) {
+        return;
+      }
+
       setState(() {
         _messages.add(
           _ChatMessage(role: _ChatMessageRole.ai, message: reply),
@@ -79,6 +114,10 @@ class _ChatScreenState extends State<ChatScreen> {
         _isWaitingForAi = false;
       });
     }).catchError((error) {
+      if (!mounted) {
+        return;
+      }
+
       setState(() {
         _messages.add(
           _ChatMessage(role: _ChatMessageRole.ai, message: 'Error: $error'),

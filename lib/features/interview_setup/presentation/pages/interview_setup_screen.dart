@@ -177,7 +177,9 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const ChatScreen(),
+                      builder: (context) => ChatScreen(
+                        questionCount: questionCount,
+                      ),
                     ),
                   );
                 },
