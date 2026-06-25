@@ -21,7 +21,7 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
   final List<String> selectedSkills = [];
   String selectedLevel = 'Junior';
   String selectedType = 'Technical';
-  int questionCount = 5;
+  int questionCount = 10;
   final TextEditingController customSkillController = TextEditingController();
   final Map<String, List<String>> customSkillsByField = {};
 
@@ -156,9 +156,9 @@ class _InterviewSetupScreenState extends State<InterviewSetupScreen> {
                 value: questionCount,
                 decoration: InterviewSetupScreenStyles.dropdownDecoration(),
                 items: const [
-                  DropdownMenuItem(value: 5, child: Text('5 questions')),
                   DropdownMenuItem(value: 10, child: Text('10 questions')),
                   DropdownMenuItem(value: 15, child: Text('15 questions')),
+                  DropdownMenuItem(value: 20, child: Text('20 questions')),
                 ],
                 onChanged: (value) {
                   if (value == null) {
