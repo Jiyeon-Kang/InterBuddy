@@ -12,8 +12,8 @@ class ChatLoadingIndicator extends StatelessWidget {
         color: Colors.grey.shade200,
         borderRadius: BorderRadius.circular(18),
       ),
-      child: Row(
-        children: const [
+      child: const Row(
+        children: [
           SizedBox(
             width: 18,
             height: 18,
